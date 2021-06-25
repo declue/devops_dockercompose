@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  jira:
+    image: atlassian/jira-software
+    container_name: jira
+    networks:
+      - devops
+    volumes:
+      - jira_data:/var/atlassian/application-data/jira
+    ports:
+      - '8080:8080'
+    environment:
+      - 'ATL_DATABASE_URL=${ATL_DATABASE_URL}'
+      - 'ATL_DB_PASSWORD=${ATL_DB_PASSWORD}'
+      - 'JVM_MINIMUM_MEMORY=${JVM_MINIMUM_MEMORY}'
+      - 'JVM_MAXIMUM_MEMORY=${JVM_MAXIMUM_MEMORY}'
+      - 'ATL_PROXY_NAME=${ATL_PROXY_NAME}'
+      - 'ATL_PROXY_PORT=${ATL_PROXY_PORT}'
+      - 'ATL_TOMCAT_SCHEME=${ATL_TOMCAT_SCHEME}'
+    logging:
+      # limit logs retained on host to 25MB
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "50"
+
+
+volumes:
+  jira_data:
+    driver_opts:
+      type: none
+      device : ${PWD}/data
+      o: bind
+
+
+networks:
+  devops:
+    external: true
