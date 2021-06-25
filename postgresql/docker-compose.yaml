@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  postgresql:
+    container_name: postgresql-11
+    image: postgres:11
+    networks:
+      - devops
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    environment:
+      - 'POSTGRES_USER=${POSTGRES_USER}'
+      - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
+      - 'POSTGRES_ENCODING=UNICODE'
+      - 'POSTGRES_COLLATE=C'
+      - 'POSTGRES_COLLATE_TYPE=C'
+    logging:
+      # limit logs retained on host to 25MB
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "50"
+
+volumes:
+  postgresql_data:
+    driver_opts:
+      type: none
+      device : ${PWD}/data
+      o: bind
+
+
+networks:
+  devops:
+    external: true
