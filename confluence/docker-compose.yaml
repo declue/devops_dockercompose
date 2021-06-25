@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  confluence:
+    image: atlassian/confluence-server
+    container_name: confluence
+    hostname: confluence
+    networks:
+      - devops
+    volumes:
+      - confluence_data:/var/atlassian/application-data
+    ports:
+      - '8090:8090'
+    environment:
+      - 'CATALINA_OPTS=${CATALINA_OPTS}'
+      - 'ATL_DATABASE_URL=${ATL_DATABASE_URL}'
+      - 'ATL_DB_PASSWORD=${ATL_DB_PASSWORD}'
+      - 'JVM_MINIMUM_MEMORY=${JVM_MINIMUM_MEMORY}'
+      - 'JVM_MAXIMUM_MEMORY=${JVM_MAXIMUM_MEMORY}'
+      - 'ATL_PROXY_NAME=${ATL_PROXY_NAME}'
+      - 'ATL_PROXY_PORT=${ATL_PROXY_PORT}'
+      - 'ATL_TOMCAT_SCHEME=${ATL_TOMCAT_SCHEME}'
+
+volumes:
+  confluence_data:
+    driver_opts:
+      type: none
+      device : ${PWD}/data
+      o: bind
+
+
+networks:
+  devops:
+    external: true 
